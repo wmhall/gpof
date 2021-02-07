@@ -116,6 +116,6 @@ p1 + theme(text = element_text(size=18))
 This plot shows the correlations between the two composite ratings for each error type. E.g., what's the correlation between the two vignettes about forgetting something agentic at work.
 
 ```{r}
-p2 + theme(text = element_text(size=18))
+p2 + theme(text = element_text(size=13))
 ```
 

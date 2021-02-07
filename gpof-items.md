@@ -28,7 +28,7 @@ each error type. E.g., what’s the correlation between the two vignettes
 about forgetting something agentic at work.
 
 ``` r
-p2 + theme(text = element_text(size=18))
+p2 + theme(text = element_text(size=13))
 ```
 
 ![](gpof-items_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
