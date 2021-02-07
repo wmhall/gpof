@@ -16,7 +16,7 @@ This plot shows the correlations at the item level. E.g., what is the
 correlation between `Agen_Work_Skillful_1` and `Agen_Work_Skillful_2`.
 
 ``` r
-p1 + theme(text = element_text(size=15))
+p1 + theme(text = element_text(size=18))
 ```
 
 ![](gpof-items_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
@@ -28,7 +28,7 @@ each error type. E.g., what’s the correlation between the two vignettes
 about forgetting something agentic at work.
 
 ``` r
-p2
+p2 + theme(text = element_text(size=18))
 ```
 
 ![](gpof-items_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
