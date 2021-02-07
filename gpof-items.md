@@ -16,7 +16,7 @@ This plot shows the correlations at the item level. E.g., what is the
 correlation between `Agen_Work_Skillful_1` and `Agen_Work_Skillful_2`.
 
 ``` r
-p1 + theme(text = element_text(size=30))
+p1 + theme(text = element_text(size=20))
 ```
 
 ![](gpof-items_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->

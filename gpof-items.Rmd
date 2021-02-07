@@ -108,7 +108,7 @@ These plots show the correlations between the first and second vignette for the 
 This plot shows the correlations at the item level. E.g., what is the correlation between `Agen_Work_Skillful_1` and `Agen_Work_Skillful_2`. 
 
 ```{r fig.height = 13, fig.width = 13}
-p1 + theme(text = element_text(size=30))
+p1 + theme(text = element_text(size=20))
 ```
 
 ## Overall relationships
