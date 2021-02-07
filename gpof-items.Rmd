@@ -93,7 +93,7 @@ cor_overall_fm %>%
 	facet_wrap(~target_gender, scales = "free_y" ) +
 	coord_flip() + 
 	tidytext::scale_x_reordered() + 
-	labs(y = "r", title = "The relationship between the overall ratings on the first and second vignette.",
+	labs(y = "r", title = "The relationship between the overall ratings on the first\nand second vignette.",
 			 subtitle = "The error bars are 95% CIs")
 
 
