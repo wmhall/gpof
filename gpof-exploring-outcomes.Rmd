@@ -1,0 +1,139 @@
+---
+title: "Exploring the GPOF data"
+author: "Will Hall"
+date: "05/02/2021"
+output: 
+ github_document:
+  toc: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, results = FALSE)
+library(tidyverse)
+library(here)
+
+plot_data <- 
+read_rds(here("working/expl_plots.rds"))
+```
+
+
+## Overview
+
+The outcome variables in these plots come from the variables called `AGEN_WORK_..`, `COMM_WORK_..`, etc. in the SPSS file you sent. I created plots for each rating type, e.g., Responsible, Trustworthy, etc., and for an overall composite of all the rating type. 
+
+Looking at the patterns of data in these plots, gender doesn't seem to be a very salient cue for participants. The patterns for the male and female targets are very consistent. There does seem to be a suggestion that forgetting to do something at work (especially if it's a communal task) is judged more negatively than forgetting something at home -- regardless of target gender. 
+
+## By trait
+
+### Responsible
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "responsible") %>% 
+	pull(p)
+```
+
+
+### Trustworthy
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "trustworthy") %>% 
+	pull(p)
+```
+
+
+### Disciplined
+
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "disciplined") %>% 
+	pull(p)
+```
+
+
+### Competence
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "competence") %>% 
+	pull(p)
+```
+
+
+### Intelligent
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "intelligent") %>% 
+	pull(p)
+```
+
+
+
+### Resourceful
+
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "resourceful") %>% 
+	pull(p)
+```
+
+
+### Sincere
+
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "sincere") %>% 
+	pull(p)
+```
+
+
+### Skillful
+
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "skillful") %>% 
+	pull(p)
+```
+
+
+### Warmth
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "warmth") %>% 
+	pull(p)
+```
+
+
+### Friendly
+
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "friendly") %>% 
+	pull(p)
+```
+
+
+### Happy
+
+
+```{r fig.width=9}
+plot_data %>% 
+	filter(trait == "happy") %>% 
+	pull(p)
+
+```
+
+
+
+## Overall 
+
+![](overall-rating.png)
+

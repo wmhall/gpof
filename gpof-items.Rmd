@@ -1,0 +1,121 @@
+---
+title: "gpof item correlations"
+author: "Will Hall"
+date: "07/02/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE, results = "hide"}
+library(tidyverse)
+library(here)
+
+data_raw <- 
+	haven::read_sav(here("working/GPOF_February 4 2021_FINAL.sav"))
+
+data_reduced <- 
+	data_raw %>% 
+	select(PID, Sex_Condition, 
+				 starts_with("Agen_", ignore.case = FALSE), 
+				 starts_with("Comm_", ignore.case = FALSE)) %>% 
+	rename_with(tolower) %>% 
+	mutate(target_gender = case_when(sex_condition == 0 ~ "male", 
+																	 sex_condition == 1 ~ "female")) %>% 
+	relocate(target_gender, .before = sex_condition) %>% 
+	drop_na(target_gender) %>% 
+	select(-sex_condition)
+
+good_pids <- 
+	data_raw %>% 
+	select(PID, good_data = `filter_$`) %>% 
+	filter(good_data == 1) %>% 
+	pull(PID) %>% 
+	as.character()
+
+fm_corr <- 
+data_reduced %>% 
+	filter(pid %in% good_pids) %>% 
+	pivot_longer(-c(pid, target_gender)) %>% 
+	mutate(item = case_when(str_detect(name, "1") ~ "one", 
+													str_detect(name, "2") ~ "two")) %>% 
+	mutate(name = str_remove_all(name, "1|2")) %>% 
+	arrange(name) %>% 
+	pivot_wider(names_from = item, values_from = value) %>% 
+	nest(data = c(pid, one, two)) %>% 
+	mutate(cor_test = data %>% map(~cor.test(.$one, .$two, data = .)), 
+				 cor_test_tidy = cor_test %>% map(broom::tidy, conf.int = TRUE))
+
+
+
+p1 <- 
+fm_corr %>% 
+	unnest(cor_test_tidy) %>% 
+	ungroup %>% 
+	mutate(name = tidytext::reorder_within(name, estimate, as.factor(target_gender))) %>% 
+	ggplot(aes(x = name, y = estimate)) + 
+	geom_pointrange(aes(ymax = conf.high, ymin = conf.low)) + 
+	facet_wrap(~target_gender, scales = "free_y" ) +
+	coord_flip() + 
+	tidytext::scale_x_reordered() +
+	labs(y = "r", title = "The relationship between ratings on the first and second vignette.",
+			 subtitle = "The error bars are 95% CIs")
+
+# overall -----------------------------------------------------------------
+
+cor_overall_fm <- 
+data_reduced %>% 
+	filter(pid %in% good_pids) %>% 
+	pivot_longer(-c(pid, target_gender)) %>% 
+	mutate(item = case_when(str_detect(name, "1") ~ "one", 
+													str_detect(name, "2") ~ "two")) %>% 
+	mutate(name = str_remove_all(name, "1|2")) %>% 
+	pivot_wider(names_from = item, values_from = value) %>% 
+	separate(name, into = c("type", "domain","trait")) %>% 
+	unite("error_type", type, domain) %>% 
+	group_by(pid, error_type, target_gender) %>% 
+	summarise(one_mean = mean(one, na.rm = TRUE), 
+						two_mean = mean(two, na.rm = TRUE)) %>% 
+	nest(data = -c(error_type, target_gender)) %>% 
+	mutate(cor_test = data %>% map(~cor.test(.$one_mean, .$two_mean, data = .)), 
+				 cor_test_tidy = cor_test %>% map(broom::tidy, conf.int = TRUE))
+
+p2 <- 
+cor_overall_fm %>% 
+	unnest(cor_test_tidy) %>% 
+  ungroup %>% 
+	mutate(error_type = tidytext::reorder_within(error_type, estimate, as.factor(target_gender))) %>% 
+	ggplot(aes(x = error_type, y = estimate)) + 
+	geom_pointrange(aes(ymax = conf.high, ymin = conf.low)) + 
+	facet_wrap(~target_gender, scales = "free_y" ) +
+	coord_flip() + 
+	tidytext::scale_x_reordered() + 
+	labs(y = "r", title = "The relationship between the overall ratings on the first and second vignette.",
+			 subtitle = "The error bars are 95% CIs")
+
+
+
+```
+## Overview
+
+These plots show the correlations between the first and second vignette for the different vignette types. For both plots, the x-axis is the correlations coefficient (*r*). The y-axis is ordered by the strength of the relationship. 
+
+## Item level correlations
+
+This plot shows the correlations at the item level. E.g., what is the correlation between `Agen_Work_Skillful_1` and `Agen_Work_Skillful_2`. 
+
+```{r fig.height = 10, fig.width = 10}
+p1
+```
+
+## Overall relationships
+
+This plot shows the correlations between the two composite ratings for each error type. E.g., what's the correlation between the two vignettes about forgetting something agentic at work.
+
+```{r}
+p2
+```
+
